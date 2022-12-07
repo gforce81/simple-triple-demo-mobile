@@ -104,6 +104,7 @@ function getOffers() {
     if (inpersonSwitch.checked) {
         body.apply_filter.mode = "IN_PERSON"
     }
+    //add logic to handle categories
 
     try {
         fetch_getOffers(url, body)
@@ -240,6 +241,7 @@ function getCategories() {
             .then(data => {
                 console.log(data);
                 displayOfferCategories(data);
+                get_user_location();
             })
     }
     catch (err) {
