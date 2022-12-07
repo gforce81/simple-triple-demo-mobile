@@ -228,3 +228,55 @@ function displayOfferDetails(data) {
 function eraseModal() {
     document.getElementById("detailsModalBody").innerHTML="";
 }
+
+function getCategories() {
+    let url = "https://triple-proxy.grogoo.dev/categories";
+    let body = {
+        "card_account": urlParams.get("cardaccount"),
+    };
+
+    try {
+        fetch_getOfferDetails(url, body)
+            .then(data => {
+                console.log(data);
+                displayOfferCategories(data);
+            })
+    }
+    catch (err) {
+        console.log("Something went wrong with getting offer categories");
+        console.log(err)
+    }
+}
+
+async function fetch_getCategories(url, body) {
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            mode: "cors",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+        return response.json()
+    }
+    catch (err) {
+        console.log("Something went wrong with getting offer categories");
+        console.log(err)
+    }
+}
+
+function displayOfferCategories(data) {
+    let offerCategories = data.categories;
+    for(let i =0; i<offerCategories.length; i++) {
+        let categoryDiv = document.createElement("div");
+        categoryDiv.id = "category-" + offerCategories[i].category + "-filter";
+        categoryDiv.className = "form-check"
+
+        categoryDiv.innerHTML = `
+        <input class="form-check-input" type="radio" name="flexRadioDefault" id="` + offerCategories[i].category + `-category-radio"/>
+        <label class="form-check-label" for="automotive-category-radio" style="font-size: 0.800em;">` + offerCategories[i].category + `   (` + offerCategories[i].count + `)</label>
+        </div>
+    `;
+        let mainContainer = document.getElementById("search-filters");
+        mainContainer.appendChild(categoryDiv);
+    }
+}
