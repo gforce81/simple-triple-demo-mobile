@@ -6,11 +6,10 @@ let latitude = "40.700514";
 let longitude = "-80.035769";
 
 function get_user_location() {
-    document.getElementById("results_cards").innerHTML="";
+    document.getElementById("results_cards").innerHTML = "";
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showPositionError);
-    }
-    else {
+    } else {
         alert("Geolocation is not supported")
     }
 }
@@ -23,7 +22,7 @@ function showPosition(position) {
 }
 
 function showPositionError(error) {
-    switch(error.code) {
+    switch (error.code) {
         case error.PERMISSION_DENIED:
             console.log("User denied the request for Geolocation.")
             getGeoCode();
@@ -53,24 +52,24 @@ function getGeoCode() {
         };
 
         try {
-            fetch_getGeoCode(url, body)
+            fetch_postRequest(url, body)
                 .then(data => {
                     latitude = data.coordinates.lat;
                     longitude = data.coordinates.lng;
                     getOffers();
                 })
-        }
-        catch (err) {
+        } catch (err) {
             console.log("Something went wrong with getting lat/lon from zip");
             console.log(err)
         }
-    }
-    else {
+    } else {
         alert("Precise location is not available. Please add the {?postalcode=} URL parameter and reload");
     }
 }
 
-async function fetch_getGeoCode(url, body) {
+
+//******** SHARED FETCH FUNCTION ********
+async function fetch_postRequest(url, body) {
     try {
         const response = await fetch(url, {
             method: "POST",
@@ -79,12 +78,13 @@ async function fetch_getGeoCode(url, body) {
             body: JSON.stringify(body)
         });
         return response.json()
-    }
-    catch (err) {
-        console.log("Something went wrong with getting lat/lon from zip");
+    } catch (err) {
+        console.log("Something went wrong with the fetch");
         console.log(err)
     }
 }
+
+//***************************************
 
 function getOffers() {
     let url = "https://triple-proxy.grogoo.dev/search";
@@ -98,20 +98,19 @@ function getOffers() {
             "latitude": parseFloat(latitude),
             "longitude": parseFloat(longitude)
         },
-        "apply_filter":{}
+        "apply_filter": {}
     };
     if (document.getElementById("inperson-switch").checked) {
         body.apply_filter.mode = "IN_PERSON"
     }
 
     try {
-        fetch_getOffers(url, body)
+        fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
                 displayOfferCards(data);
             })
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Something went wrong with getting offers");
         console.log(err)
     }
@@ -119,7 +118,7 @@ function getOffers() {
 
 // dedicated search function for category filters because filters might get populated after the initial query
 function getOffersWithCategories() {
-    document.getElementById("results_cards").innerHTML="";
+    document.getElementById("results_cards").innerHTML = "";
     let url = "https://triple-proxy.grogoo.dev/search";
     let body = {
         "card_account": urlParams.get("cardaccount"),
@@ -131,81 +130,64 @@ function getOffersWithCategories() {
             "latitude": parseFloat(latitude),
             "longitude": parseFloat(longitude)
         },
-        "apply_filter":{}
+        "apply_filter": {}
     };
     //handling filters
     if (document.getElementById("inperson-switch").checked) {
         body.apply_filter.mode = "IN_PERSON"
     }
-    if (document.getElementById("AUTOMOTIVE-category-radio").checked){
+    if (document.getElementById("AUTOMOTIVE-category-radio").checked) {
         body.apply_filter.category = "AUTOMOTIVE"
     }
-    if (document.getElementById("FOOD-category-radio").checked){
+    if (document.getElementById("FOOD-category-radio").checked) {
         body.apply_filter.category = "FOOD"
     }
-    if (document.getElementById("ENTERTAINMENT-category-radio").checked){
+    if (document.getElementById("ENTERTAINMENT-category-radio").checked) {
         body.apply_filter.category = "ENTERTAINMENT"
     }
-    if (document.getElementById("RETAIL-category-radio").checked){
+    if (document.getElementById("RETAIL-category-radio").checked) {
         body.apply_filter.category = "RETAIL"
     }
-    if (document.getElementById("TRAVEL-category-radio").checked){
+    if (document.getElementById("TRAVEL-category-radio").checked) {
         body.apply_filter.category = "TRAVEL"
     }
-    if (document.getElementById("FINANCIAL_SERVICES-category-radio").checked){
+    if (document.getElementById("FINANCIAL_SERVICES-category-radio").checked) {
         body.apply_filter.category = "FINANCIAL_SERVICES"
     }
-    if (document.getElementById("OFFICE_AND_BUSINESS-category-radio").checked){
+    if (document.getElementById("OFFICE_AND_BUSINESS-category-radio").checked) {
         body.apply_filter.category = "OFFICE_AND_BUSINESS"
     }
-    if (document.getElementById("HOME-category-radio").checked){
+    if (document.getElementById("HOME-category-radio").checked) {
         body.apply_filter.category = "HOME"
     }
-    if (document.getElementById("HEALTH_AND_BEAUTY-category-radio").checked){
+    if (document.getElementById("HEALTH_AND_BEAUTY-category-radio").checked) {
         body.apply_filter.category = "HEALTH_AND_BEAUTY"
     }
-    if (document.getElementById("CHILDREN_AND_FAMILY-category-radio").checked){
+    if (document.getElementById("CHILDREN_AND_FAMILY-category-radio").checked) {
         body.apply_filter.category = "CHILDREN_AND_FAMILY"
     }
-    if (document.getElementById("ELECTRONICS-category-radio").checked){
+    if (document.getElementById("ELECTRONICS-category-radio").checked) {
         body.apply_filter.category = "ELECTRONICS"
     }
-    if (document.getElementById("UTILITIES_AND_TELECOM-category-radio").checked){
+    if (document.getElementById("UTILITIES_AND_TELECOM-category-radio").checked) {
         body.apply_filter.category = "UTILITIES_AND_TELECOM"
     }
     try {
-        fetch_getOffers(url, body)
+        fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
                 displayOfferCards(data);
             })
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Something went wrong with getting offers");
         console.log(err)
     }
 }
 
-
-async function fetch_getOffers(url, body) {
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            mode: "cors",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
-        return response.json()
-    }
-    catch (err) {
-        console.log("Something went wrong with getting offers");
-        console.log(err)
-    }
-}
 
 function displayOfferCards(data) {
     let results = data.offers;
-    if(results.length === 0){
+    if (results.length === 0) {
         let searchResultCard = document.createElement("div");
         searchResultCard.id = "no-offer-card";
         searchResultCard.className = "card";
@@ -224,9 +206,8 @@ function displayOfferCards(data) {
         `
         let mainContainer = document.getElementById("results_cards");
         mainContainer.appendChild(searchResultCard);
-    }
-    else{
-        for (let i=0; i<results.length; i++) {
+    } else {
+        for (let i = 0; i < results.length; i++) {
             let searchResultCard = document.createElement("div");
             searchResultCard.id = "offer-" + results[i].id;
             searchResultCard.className = "card";
@@ -242,7 +223,7 @@ function displayOfferCards(data) {
                     <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">` + results[i].headline + `</h5>
                     <p class="card-text" style="font-size: 0.800em;">` + results[i].merchant_name + `</p>
                     <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + results[i].category + `
-                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + results[i].id +`)">
+                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + results[i].id + `)">
                         <i class="fas fa-eye"></i>
                     </a></p>
                 </div>
@@ -267,33 +248,17 @@ function getOfferDetails(offerid) {
     };
 
     try {
-        fetch_getOfferDetails(url, body)
+        fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
                 displayOfferDetails(data);
             })
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Something went wrong with getting offer details");
         console.log(err)
     }
 }
 
-async function fetch_getOfferDetails(url, body) {
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            mode: "cors",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
-        return response.json()
-    }
-    catch (err) {
-        console.log("Something went wrong with getting offer details");
-        console.log(err)
-    }
-}
 
 function displayOfferDetails(data) {
     let displayDetails = data.offer;
@@ -317,13 +282,13 @@ function displayOfferDetails(data) {
     mainContainer.appendChild(detailsDiv);
 
     //handle affiliate link
-    if(displayDetails.type==="AFFILIATE"){
+    if (displayDetails.type === "AFFILIATE") {
         getAffiliateLink(displayDetails.id);
     }
 }
 
 function eraseModal() {
-    document.getElementById("detailsModalBody").innerHTML="";
+    document.getElementById("detailsModalBody").innerHTML = "";
 }
 
 function getCategories() {
@@ -333,38 +298,22 @@ function getCategories() {
     };
 
     try {
-        fetch_getCategories(url, body)
+        fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
                 displayOfferCategories(data);
                 get_user_location();
             })
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Something went wrong with getting offer categories");
         console.log(err)
     }
 }
 
-async function fetch_getCategories(url, body) {
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            mode: "cors",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
-        return response.json()
-    }
-    catch (err) {
-        console.log("Something went wrong with getting offer categories");
-        console.log(err)
-    }
-}
 
 function displayOfferCategories(data) {
     let offerCategories = data.categories;
-    for(let i =0; i<offerCategories.length; i++) {
+    for (let i = 0; i < offerCategories.length; i++) {
         let categoryDiv = document.createElement("div");
         categoryDiv.id = "category-" + offerCategories[i].category + "-filter";
         categoryDiv.className = "form-check"
@@ -388,33 +337,17 @@ function getAffiliateLink(offerid) {
     };
 
     try {
-        fetch_getAffiliateLink(url, body)
+        fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
                 createAffiliateButton(data)
             })
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Something went wrong with getting an affiliate link");
         console.log(err)
     }
 }
 
-async function fetch_getAffiliateLink(url, body) {
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            mode: "cors",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
-        return response.json()
-    }
-    catch (err) {
-        console.log("Something went wrong with getting affiliate link");
-        console.log(err)
-    }
-}
 
 function createAffiliateButton(data) {
     //create the button
