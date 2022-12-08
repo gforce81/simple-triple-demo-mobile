@@ -205,6 +205,9 @@ async function fetch_getOffers(url, body) {
 
 function displayOfferCards(data) {
     let results = data.offers;
+    if(results.length === 0){
+        alert("No offers :-( Make sure you expand your search beyond In-Person Only")
+    }
     for (let i=0; i<results.length; i++) {
         let searchResultCard = document.createElement("div");
         searchResultCard.id = "offer-" + results[i].id;
