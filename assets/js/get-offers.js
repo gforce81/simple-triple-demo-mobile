@@ -100,11 +100,9 @@ function getOffers() {
         },
         "apply_filter":{}
     };
-    let inpersonSwitch = document.getElementById("inperson-switch");
-    if (inpersonSwitch.checked) {
+    if (document.getElementById("inperson-switch").checked) {
         body.apply_filter.mode = "IN_PERSON"
     }
-    //add logic to handle categories
 
     try {
         fetch_getOffers(url, body)
@@ -118,6 +116,76 @@ function getOffers() {
         console.log(err)
     }
 }
+
+// dedicated search function for category filters because filters might get populated after the initial query
+function getOffersWithCategories() {
+    document.getElementById("results_cards").innerHTML="";
+    let url = "https://triple-proxy.grogoo.dev/search";
+    let body = {
+        "card_account": urlParams.get("cardaccount"),
+        "text_query": document.getElementById("searchbar").value,
+        "page_size": 25,
+        "page_offset": 0,
+        "proximity_target": {
+            "radius": 35000,
+            "latitude": parseFloat(latitude),
+            "longitude": parseFloat(longitude)
+        },
+        "apply_filter":{}
+    };
+    //handling filters
+    if (document.getElementById("inperson-switch").checked) {
+        body.apply_filter.mode = "IN_PERSON"
+    }
+    if (document.getElementById("AUTOMOTIVE-category-radio").checked){
+        body.apply_filter.category = "AUTOMOTIVE"
+    }
+    if (document.getElementById("FOOD-category-radio").checked){
+        body.apply_filter.category = "FOOD"
+    }
+    if (document.getElementById("ENTERTAINMENT-category-radio").checked){
+        body.apply_filter.category = "ENTERTAINMENT"
+    }
+    if (document.getElementById("RETAIL-category-radio").checked){
+        body.apply_filter.category = "RETAIL"
+    }
+    if (document.getElementById("TRAVEL-category-radio").checked){
+        body.apply_filter.category = "TRAVEL"
+    }
+    if (document.getElementById("FINANCIAL_SERVICES-category-radio").checked){
+        body.apply_filter.category = "FINANCIAL_SERVICES"
+    }
+    if (document.getElementById("OFFICE_AND_BUSINESS-category-radio").checked){
+        body.apply_filter.category = "OFFICE_AND_BUSINESS"
+    }
+    if (document.getElementById("HOME-category-radio").checked){
+        body.apply_filter.category = "HOME"
+    }
+    if (document.getElementById("HEALTH_AND_BEAUTY-category-radio").checked){
+        body.apply_filter.category = "HEALTH_AND_BEAUTY"
+    }
+    if (document.getElementById("CHILDREN_AND_FAMILY-category-radio").checked){
+        body.apply_filter.category = "CHILDREN_AND_FAMILY"
+    }
+    if (document.getElementById("ELECTRONICS-category-radio").checked){
+        body.apply_filter.category = "ELECTRONICS"
+    }
+    if (document.getElementById("UTILITIES_AND_TELECOM-category-radio").checked){
+        body.apply_filter.category = "UTILITIES_AND_TELECOM"
+    }
+    try {
+        fetch_getOffers(url, body)
+            .then(data => {
+                console.log(data);
+                displayOfferCards(data);
+            })
+    }
+    catch (err) {
+        console.log("Something went wrong with getting offers");
+        console.log(err)
+    }
+}
+
 
 async function fetch_getOffers(url, body) {
     try {
@@ -218,12 +286,18 @@ function displayOfferDetails(data) {
         <p style="color: dodgerblue">` + displayDetails.headline + `</p>
         <p>` + displayDetails.description + `</p>
         <br>
+        <div id="affiliate-button-div"></div>
         <br>
         <p style="font-size: 0.500em; font-weight: lighter">` + displayDetails.terms_and_conditions + `</p>
         </div>
     `;
     let mainContainer = document.getElementById("detailsModalBody");
     mainContainer.appendChild(detailsDiv);
+
+    //handle affiliate link
+    if(displayDetails.type==="AFFILIATE"){
+        getAffiliateLink(displayDetails.id);
+    }
 }
 
 function eraseModal() {
@@ -237,7 +311,7 @@ function getCategories() {
     };
 
     try {
-        fetch_getOfferDetails(url, body)
+        fetch_getCategories(url, body)
             .then(data => {
                 console.log(data);
                 displayOfferCategories(data);
@@ -275,10 +349,61 @@ function displayOfferCategories(data) {
 
         categoryDiv.innerHTML = `
         <input class="form-check-input" type="radio" name="flexRadioDefault" id="` + offerCategories[i].category + `-category-radio"/>
-        <label class="form-check-label" for="automotive-category-radio" style="font-size: 0.800em;">` + offerCategories[i].category + `   (` + offerCategories[i].count + `)</label>
+        <label class="form-check-label" for="automotive-category-radio" style="font-size: 0.800em;">` + offerCategories[i].category + `</label>
         </div>
     `;
-        let mainContainer = document.getElementById("search-filters");
+        let mainContainer = document.getElementById("categories_radio_buttons");
         mainContainer.appendChild(categoryDiv);
     }
+}
+
+function getAffiliateLink(offerid) {
+    let url = "https://triple-proxy.grogoo.dev/affiliate";
+    let body = {
+        "card_account_external_id": urlParams.get("cardaccount-external"),
+        "card_program_external_id": urlParams.get("cardprogram-external"),
+        "offer_id": offerid
+    };
+
+    try {
+        fetch_getAffiliateLink(url, body)
+            .then(data => {
+                console.log(data);
+                createAffiliateButton(data)
+            })
+    }
+    catch (err) {
+        console.log("Something went wrong with getting an affiliate link");
+        console.log(err)
+    }
+}
+
+async function fetch_getAffiliateLink(url, body) {
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            mode: "cors",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+        return response.json()
+    }
+    catch (err) {
+        console.log("Something went wrong with getting affiliate link");
+        console.log(err)
+    }
+}
+
+function createAffiliateButton(data) {
+    //create the button
+    let affiliateButton = document.createElement("button");
+    affiliateButton.id = "affiliate-button";
+    affiliateButton.className = "btn-sm btn-secondary";
+    affiliateButton.style = "margin-bottom: 5px;";
+    affiliateButton.innerHTML = `
+        <a href="` + data.url + `" target="_blank" rel="noopener noreferrer"> 
+            <i class="fas fa-credit-card"></i></a>
+    `
+    let buttonContainer = document.getElementById("affiliate-button-div");
+    buttonContainer.appendChild(affiliateButton);
 }
