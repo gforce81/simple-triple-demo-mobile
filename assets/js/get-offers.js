@@ -91,7 +91,7 @@ function getOffers() {
     let body = {
         "card_account": urlParams.get("cardaccount"),
         "text_query": document.getElementById("searchbar").value,
-        "page_size": 25,
+        "page_size": 50,
         "page_offset": 0,
         "proximity_target": {
             "radius": 35000,
@@ -124,7 +124,7 @@ function getOffersWithCategories() {
     let body = {
         "card_account": urlParams.get("cardaccount"),
         "text_query": document.getElementById("searchbar").value,
-        "page_size": 25,
+        "page_size": 50,
         "page_offset": 0,
         "proximity_target": {
             "radius": 35000,
