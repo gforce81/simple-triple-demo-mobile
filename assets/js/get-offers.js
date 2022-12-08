@@ -206,15 +206,33 @@ async function fetch_getOffers(url, body) {
 function displayOfferCards(data) {
     let results = data.offers;
     if(results.length === 0){
-        console.log("No offers :-( Make sure you expand your search beyond In-Person Only")
-    }
-    for (let i=0; i<results.length; i++) {
         let searchResultCard = document.createElement("div");
-        searchResultCard.id = "offer-" + results[i].id;
+        searchResultCard.id = "no-offer-card";
         searchResultCard.className = "card";
         searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
 
         searchResultCard.innerHTML = `
+        <div class="col-md-4 d-flex align-items-center" style="width: 20%">
+                <i class="far fa-frown"></i>
+            </div>
+            <div class="col-md-8" style="width: 80%">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">No results</h5>
+                    <p class="card-text" style="font-size: 0.800em;">Make sure you expand your search by switching off the "In-Person Only" toggle</p>
+                </div>
+            </div></div>
+        `
+        let mainContainer = document.getElementById("results_cards");
+        mainContainer.appendChild(searchResultCard);
+    }
+    else{
+        for (let i=0; i<results.length; i++) {
+            let searchResultCard = document.createElement("div");
+            searchResultCard.id = "offer-" + results[i].id;
+            searchResultCard.className = "card";
+            searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
+
+            searchResultCard.innerHTML = `
         <div class="col-md-4 d-flex align-items-center" style="width: 20%">
                 <img src="` + results[i].merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
                         10px; height: auto; width: 80%;" alt="offer logo">
@@ -230,8 +248,9 @@ function displayOfferCards(data) {
                 </div>
             </div></div>
         `
-        let mainContainer = document.getElementById("results_cards");
-        mainContainer.appendChild(searchResultCard);
+            let mainContainer = document.getElementById("results_cards");
+            mainContainer.appendChild(searchResultCard);
+        }
     }
 }
 
