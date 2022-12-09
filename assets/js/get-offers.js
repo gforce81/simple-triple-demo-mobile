@@ -261,6 +261,7 @@ function getOfferDetails(offerid) {
 
 
 function displayOfferDetails(data) {
+    eraseModal();
     let displayDetails = data.offer;
     let detailsDiv = document.createElement("div");
     detailsDiv.id = "offer-" + displayDetails.id;
