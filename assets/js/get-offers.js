@@ -224,8 +224,10 @@ function displayOfferCards(data) {
                     <p class="card-text" style="font-size: 0.800em;">` + results[i].merchant_name + `</p>
                     <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + results[i].category + `
                     <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + results[i].id + `)">
-                        <i class="fas fa-eye"></i>
-                    </a></p>
+                        <i class="fas fa-eye"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + results[i].id + `)" id="likeButton-` + results[i].id + `"><i class="far fa-thumbs-up"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + results[i].id + `)" id="dislikeButton-` + results[i].id + `"><i class="far fa-thumbs-down"></i></a>
+                    </p> 
                 </div>
             </div></div>
         `
@@ -362,4 +364,20 @@ function createAffiliateButton(data) {
     `
     let buttonContainer = document.getElementById("affiliate-button-div");
     buttonContainer.appendChild(affiliateButton);
+}
+
+function offerLike(offerId) {
+    if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-up"></i>`) {
+        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-up"></i>`;
+    } else {
+        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-up"></i>`
+    }
+}
+
+function offerDislike(offerId) {
+    if (document.getElementById("dislikeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-down"></i>`) {
+        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-down"></i>`;
+    } else {
+        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-down"></i>`
+    }
 }
