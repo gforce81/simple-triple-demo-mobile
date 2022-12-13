@@ -369,6 +369,7 @@ function createAffiliateButton(data) {
 function offerLike(offerId) {
     if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-up"></i>`) {
         document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-up"></i>`;
+        getUserPreferences();
     } else {
         document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-up"></i>`
     }
@@ -379,5 +380,54 @@ function offerDislike(offerId) {
         document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-down"></i>`;
     } else {
         document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-down"></i>`
+    }
+}
+
+function getUserPreferences() {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let card_account= urlParams.get("cardaccount-external");
+    url = url + "?card_account=" + card_account;
+
+    try {
+        fetch_GetRequest(url)
+            .then(data => {
+                console.log(data);
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting the user preferences");
+        console.log(err)
+    }
+}
+
+async function fetch_GetRequest(url, params) {
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            mode: "cors",
+        });
+        return response.json()
+    } catch (err) {
+        console.log("Something went wrong with the fetch");
+        console.log(err)
+    }
+}
+
+function recordUserLike(offerId, cardAccount) {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let body = {
+        "card_account": urlParams.get("cardaccount-external"),
+        "last_updated": urlParams.get("cardprogram-external"),
+        "offer_id": offerid
+    };
+
+    try {
+        fetch_postRequest(url, body)
+            .then(data => {
+                console.log(data);
+                createAffiliateButton(data)
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting an affiliate link");
+        console.log(err)
     }
 }
