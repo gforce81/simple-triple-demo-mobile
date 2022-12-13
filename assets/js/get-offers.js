@@ -427,7 +427,7 @@ function recordUserLike(offerId, cardAccount, data) {
     };
 
     try {
-        fetch_postRequest(url, body)
+        fetch_putRequest(url, body)
             .then(data => {
                 console.log(data);
             })
