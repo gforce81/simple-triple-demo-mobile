@@ -219,8 +219,8 @@ function displayOfferCards(data) {
                     <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + results[i].category + `
                     <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + results[i].id + `)">
                         <i class="fas fa-eye fa-2x"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + results[i].id + `)" id="likeButton-` + results[i].id + `"><i class="far fa-thumbs-up fa-2x"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + results[i].id + `)" id="dislikeButton-` + results[i].id + `"><i class="far fa-thumbs-down fa-2x"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 40px; margin-top: 7px;" href="#!" role="button" onclick="offerLike(` + results[i].id + `)" id="likeButton-` + results[i].id + `"><i class="far fa-thumbs-up fa-2x"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 7px;" href="#!" role="button" onclick="offerDislike(` + results[i].id + `)" id="dislikeButton-` + results[i].id + `"><i class="far fa-thumbs-down fa-2x"></i></a>
                     </p> 
                 </div>
             </div></div>
@@ -254,8 +254,8 @@ function createReplacementOffer(offerIndex) {
                     <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + recommendedOffersDetailsArray[offerIndex].category + `
                     <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + recommendedOffersDetailsArray[offerIndex].id + `)">
                         <i class="fas fa-eye fa-2x"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="likeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-up fa-2x"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-down fa-2x"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 40px; margin-top: 7px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="likeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-up fa-2x"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 7px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-down fa-2x"></i></a>
                     </p> 
                 </div>
             </div></div>
