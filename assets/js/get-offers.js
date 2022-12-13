@@ -511,7 +511,7 @@ function getDefaultUserDislikes() {
 
 // Get the details for each recommended offer
 function getRecommendedOfferDetails() {
-    for (let i = 0; i <= defaultUserRecommendations; i++) {
+    for (let i = 0; i <= defaultUserRecommendations.length; i++) {
         let url = "https://triple-proxy.grogoo.dev/details";
         let body = {
             "card_account": urlParams.get("cardaccount"),
