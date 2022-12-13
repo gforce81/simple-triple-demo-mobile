@@ -538,6 +538,8 @@ function getRecommendedOfferDetails() {
 
 // Record the details in an array of JSON
 function recommendedOffersDetails(data) {
+    console.log("REC OFFERS");
+    condole.log(data);
     let recOffer = {
         "id": data.offer.id,
         "headline": data.offer.headline,
