@@ -195,7 +195,8 @@ function displayOfferCards(data) {
             if (defaultUserDislikes.includes(results[i].id)) {
                 console.log("Skipping offer ID: " + results[i].id);
                 try {
-                    createReplacementOffer(i);
+                    // -1 on the index so that we can assume/will work that we will have at least one recommendation
+                    createReplacementOffer(i-1);
                 }
                 catch (e) {
                     console.log("Not enough recommendations available")
