@@ -515,7 +515,7 @@ function getRecommendedOfferDetails() {
         let url = "https://triple-proxy.grogoo.dev/details";
         let body = {
             "card_account": urlParams.get("cardaccount"),
-            "offer_id": offerid,
+            "offer_id": defaultUserRecommendations[i],
             "proximity_target": {
                 "radius": 35000,
                 "latitude": parseFloat(latitude),
