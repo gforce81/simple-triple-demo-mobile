@@ -417,18 +417,18 @@ function getUserPreferencesLike(offerId) {
 
 function recordUserLike(offerId, cardAccount, data) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
-    let currentlikes = data.liked_offers;
-    let newLikes = currentlikes.push(offerId);
+    let userLikes = data.liked_offers;
+    userLikes = userLikes.push(offerId.toString());
     console.log("CURRENT LIKES");
-    console.log(currentlikes);
+    console.log(userLikes);
     console.log("NEW LIKES");
-    console.log(newLikes);
+    console.log(userLikes);
     const currentDate = new Date(Date.now());
     let isoDate = currentDate.toISOString();
     let body = {
         "card_account": cardAccount,
         "last_updated": isoDate,
-        "liked_offers": newLikes
+        "liked_offers": userLikes
     };
 
     try {
