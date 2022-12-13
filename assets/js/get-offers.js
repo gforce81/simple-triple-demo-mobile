@@ -418,7 +418,7 @@ function getUserPreferencesLike(offerId) {
 function recordUserLike(offerId, cardAccount, data) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
     let currentlikes = data.liked_offers;
-    let newLikes = currentlikes.push(offerId.toString());
+    let newLikes = currentlikes.push(offerId);
     console.log("CURRENT LIKES");
     console.log(currentlikes);
     console.log("NEW LIKES");
