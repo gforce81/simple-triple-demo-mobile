@@ -385,7 +385,7 @@ function offerDislike(offerId) {
 
 function getUserPreferences() {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
-    let card_account= urlParams.get("cardaccount-external");
+    let card_account= urlParams.get("cardaccount");
     url = url + "?card_account=" + card_account;
 
     try {
