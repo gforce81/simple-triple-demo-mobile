@@ -501,6 +501,7 @@ function getDefaultUserDislikes() {
                 defaultUserDislikes = data.disliked_offers;
                 // Get the calculated recommended offer IDs as we load the page so that we can substitute the dislikes for this
                 defaultUserRecommendations = data.recommended_offers;
+                getRecommendedOfferDetails();
             })
     } catch (err) {
         console.log("Something went wrong with getting the user preferences");
