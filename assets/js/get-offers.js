@@ -228,6 +228,9 @@ function displayOfferCards(data) {
 
 // function to create a replacement offer based on recommendation array
 function createReplacementOffer(offerIndex) {
+    console.log("RECOMMENDED OFFER WITH INDEX: " + offerIndex);
+    console.log("RECOMMENDED OFFER: ");
+    console.log(recommendedOffersDetailsArray[offerIndex]);
     let searchResultCard = document.createElement("div");
     searchResultCard.id = "offer-" + recommendedOffersDetailsArray[offerIndex].id;
     searchResultCard.className = "card";
@@ -538,8 +541,8 @@ function getRecommendedOfferDetails() {
 
 // Record the details in an array of JSON
 function recommendedOffersDetails(data) {
-    console.log("REC OFFERS");
-    console.log(data);
+    //console.log("REC OFFERS");
+    //console.log(data);
     let recOffer = {
         "id": data.offer.id,
         "headline": data.offer.headline,
@@ -547,8 +550,8 @@ function recommendedOffersDetails(data) {
         "merchant_logo_url": data.offer.merchant_logo_url
     };
     recommendedOffersDetailsArray.push(recOffer);
-    console.log("RECOMMENDED OFFERS ARRAY DETAILS");
-    console.log(recommendedOffersDetailsArray);
+    //console.log("RECOMMENDED OFFERS ARRAY DETAILS");
+    //console.log(recommendedOffersDetailsArray);
 }
 
 //******** SHARED FETCH POST FUNCTION ********
