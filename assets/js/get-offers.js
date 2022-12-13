@@ -1,6 +1,7 @@
 // Global Variables & Constants
 const urlQueryString = window.location.search;
 const urlParams = new URLSearchParams(urlQueryString);
+let defaultUserDislikes = [];
 
 let latitude = "40.700514";
 let longitude = "-80.035769";
@@ -208,12 +209,15 @@ function displayOfferCards(data) {
         mainContainer.appendChild(searchResultCard);
     } else {
         for (let i = 0; i < results.length; i++) {
-            let searchResultCard = document.createElement("div");
-            searchResultCard.id = "offer-" + results[i].id;
-            searchResultCard.className = "card";
-            searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
+            if (defaultUserDislikes.includes(results[i].id)) {
+                console.log("Skipping offer ID: " + results[i].id)
+            } else {
+                let searchResultCard = document.createElement("div");
+                searchResultCard.id = "offer-" + results[i].id;
+                searchResultCard.className = "card";
+                searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
 
-            searchResultCard.innerHTML = `
+                searchResultCard.innerHTML = `
         <div class="col-md-4 d-flex align-items-center" style="width: 20%">
                 <img src="` + results[i].merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
                         10px; height: auto; width: 80%;" alt="offer logo">
@@ -231,8 +235,9 @@ function displayOfferCards(data) {
                 </div>
             </div></div>
         `
-            let mainContainer = document.getElementById("results_cards");
-            mainContainer.appendChild(searchResultCard);
+                let mainContainer = document.getElementById("results_cards");
+                mainContainer.appendChild(searchResultCard);
+            }
         }
     }
 }
@@ -304,6 +309,7 @@ function getCategories() {
         fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
+                getDefaultUserDislikes();
                 displayOfferCategories(data);
                 get_user_location();
             })
@@ -378,6 +384,7 @@ function offerLike(offerId) {
 function offerDislike(offerId) {
     if (document.getElementById("dislikeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-down"></i>`) {
         document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-down"></i>`;
+        getUserPreferencesDislike(offerId);
     } else {
         document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-down"></i>`
     }
@@ -396,11 +403,12 @@ async function fetch_GetRequest(url, params) {
         console.log(err)
     }
 }
+
 //********  ********
 
 function getUserPreferencesLike(offerId) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
-    let card_account= urlParams.get("cardaccount");
+    let card_account = urlParams.get("cardaccount");
     url = url + "?card_account=" + card_account;
 
     try {
@@ -415,14 +423,27 @@ function getUserPreferencesLike(offerId) {
     }
 }
 
+function getUserPreferencesDislike(offerId) {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let card_account = urlParams.get("cardaccount");
+    url = url + "?card_account=" + card_account;
+
+    try {
+        fetch_GetRequest(url)
+            .then(data => {
+                console.log(data);
+                recordUserDislike(offerId, card_account, data)
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting the user preferences");
+        console.log(err)
+    }
+}
+
 function recordUserLike(offerId, cardAccount, data) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
     let userLikes = data.liked_offers;
-    console.log("CURRENT LIKES");
-    console.log(userLikes);
     userLikes.push(offerId.toString());
-    console.log("NEW LIKES");
-    console.log(userLikes);
     const currentDate = new Date(Date.now());
     let isoDate = currentDate.toISOString();
     let body = {
@@ -442,6 +463,48 @@ function recordUserLike(offerId, cardAccount, data) {
     }
 }
 
+function recordUserDislike(offerId, cardAccount, data) {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let userDislikes = data.disliked_offers;
+    userDislikes.push(offerId.toString());
+    const currentDate = new Date(Date.now());
+    let isoDate = currentDate.toISOString();
+    let body = {
+        "card_account": cardAccount,
+        "last_updated": isoDate,
+        "disliked_offers": userDislikes
+    };
+
+    try {
+        fetch_putRequest(url, body)
+            .then(data => {
+                console.log(data);
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting an affiliate link");
+        console.log(err)
+    }
+}
+
+function getDefaultUserDislikes() {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let card_account = urlParams.get("cardaccount");
+    url = url + "?card_account=" + card_account;
+
+    try {
+        fetch_GetRequest(url)
+            .then(data => {
+                console.log(data);
+                defaultUserDislikes = data.disliked_offers;
+
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting the user preferences");
+        console.log(err)
+    }
+}
+
+
 //******** SHARED FETCH PUT FUNCTION ********
 async function fetch_putRequest(url, body) {
     try {
@@ -457,4 +520,5 @@ async function fetch_putRequest(url, body) {
         console.log(err)
     }
 }
+
 //***************************************
