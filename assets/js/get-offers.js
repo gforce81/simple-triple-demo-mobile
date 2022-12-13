@@ -229,24 +229,24 @@ function displayOfferCards(data) {
 // function to create a replacement offer based on recommendation array
 function createReplacementOffer(offerIndex) {
     let searchResultCard = document.createElement("div");
-    searchResultCard.id = "offer-" + recommendedOffersDetailsArray[i].id;
+    searchResultCard.id = "offer-" + recommendedOffersDetailsArray[offerIndex].id;
     searchResultCard.className = "card";
     searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
 
     searchResultCard.innerHTML = `
         <div class="col-md-4 d-flex align-items-center" style="width: 20%">
-                <img src="` + recommendedOffersDetailsArray[i].merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
+                <img src="` + recommendedOffersDetailsArray[offerIndex].merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
                         10px; height: auto; width: 80%;" alt="offer logo">
             </div>
             <div class="col-md-8" style="width: 80%">
                 <div class="card-body">
-                    <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">` + recommendedOffersDetailsArray[i].headline + `</h5>
-                    <p class="card-text" style="font-size: 0.800em;">` + recommendedOffersDetailsArray[i].merchant_name + `</p>
-                    <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + recommendedOffersDetailsArray[i].category + `
-                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + recommendedOffersDetailsArray[i].id + `)">
+                    <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">` + recommendedOffersDetailsArray[offerIndex].headline + `</h5>
+                    <p class="card-text" style="font-size: 0.800em;">` + recommendedOffersDetailsArray[offerIndex].merchant_name + `</p>
+                    <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + recommendedOffersDetailsArray[offerIndex].category + `
+                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + recommendedOffersDetailsArray[offerIndex].id + `)">
                         <i class="fas fa-eye"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[i].id + `)" id="likeButton-` + recommendedOffersDetailsArray[i].id + `"><i class="far fa-thumbs-up"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[i].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[i].id + `"><i class="far fa-thumbs-down"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="likeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-up"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-down"></i></a>
                     </p> 
                 </div>
             </div></div>
