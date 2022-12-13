@@ -369,7 +369,7 @@ function createAffiliateButton(data) {
 function offerLike(offerId) {
     if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-up"></i>`) {
         document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-up"></i>`;
-        getUserPreferences();
+        getUserPreferencesLike(offerId);
     } else {
         document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-up"></i>`
     }
@@ -383,22 +383,7 @@ function offerDislike(offerId) {
     }
 }
 
-function getUserPreferences() {
-    let url = "https://triple-proxy.grogoo.dev/user-preferences";
-    let card_account= urlParams.get("cardaccount");
-    url = url + "?card_account=" + card_account;
-
-    try {
-        fetch_GetRequest(url)
-            .then(data => {
-                console.log(data);
-            })
-    } catch (err) {
-        console.log("Something went wrong with getting the user preferences");
-        console.log(err)
-    }
-}
-
+//******** SHARED FETCH GET FUNCTION ********
 async function fetch_GetRequest(url, params) {
     try {
         const response = await fetch(url, {
@@ -411,23 +396,60 @@ async function fetch_GetRequest(url, params) {
         console.log(err)
     }
 }
+//********  ********
 
-function recordUserLike(offerId, cardAccount) {
+function getUserPreferencesLike(offerId) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let card_account= urlParams.get("cardaccount");
+    url = url + "?card_account=" + card_account;
+
+    try {
+        fetch_GetRequest(url)
+            .then(data => {
+                console.log(data);
+                recordUserLike(offerId, card_account, data)
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting the user preferences");
+        console.log(err)
+    }
+}
+
+function recordUserLike(offerId, cardAccount, data) {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let currentlikes = data.liked_offers;
+    const currentDate = new Date(Date.now());
+    let isoDate = currentDate.toISOString();
     let body = {
-        "card_account": urlParams.get("cardaccount-external"),
-        "last_updated": urlParams.get("cardprogram-external"),
-        "offer_id": offerid
+        "card_account": cardAccount,
+        "last_updated": isoDate,
+        "liked_offers": currentlikes.push(offerId)
     };
 
     try {
         fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
-                createAffiliateButton(data)
             })
     } catch (err) {
         console.log("Something went wrong with getting an affiliate link");
         console.log(err)
     }
 }
+
+//******** SHARED FETCH PUT FUNCTION ********
+async function fetch_putRequest(url, body) {
+    try {
+        const response = await fetch(url, {
+            method: "PUT",
+            mode: "cors",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+        return response.json()
+    } catch (err) {
+        console.log("Something went wrong with the fetch");
+        console.log(err)
+    }
+}
+//***************************************
