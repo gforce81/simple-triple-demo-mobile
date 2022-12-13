@@ -218,7 +218,7 @@ function displayOfferCards(data) {
                     <p class="card-text" style="font-size: 0.800em;">` + results[i].merchant_name + `</p>
                     <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + results[i].category + `
                     <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + results[i].id + `)">
-                        <i class="fas fa-eye"></i></a>
+                        <i class="fas fa-eye fa-2x"></i></a>
                         <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + results[i].id + `)" id="likeButton-` + results[i].id + `"><i class="far fa-thumbs-up"></i></a>
                         <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + results[i].id + `)" id="dislikeButton-` + results[i].id + `"><i class="far fa-thumbs-down"></i></a>
                     </p> 
@@ -253,7 +253,7 @@ function createReplacementOffer(offerIndex) {
                     <p class="card-text" style="font-size: 0.800em;">` + recommendedOffersDetailsArray[offerIndex].merchant_name + `</p>
                     <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + recommendedOffersDetailsArray[offerIndex].category + `
                     <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + recommendedOffersDetailsArray[offerIndex].id + `)">
-                        <i class="fas fa-eye"></i></a>
+                        <i class="fas fa-eye fa-2x"></i></a>
                         <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="likeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-up"></i></a>
                         <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-down"></i></a>
                     </p> 
@@ -389,7 +389,7 @@ function createAffiliateButton(data) {
     affiliateButton.style = "margin-bottom: 5px;";
     affiliateButton.innerHTML = `
         <a href="` + data.url + `" target="_blank" rel="noopener noreferrer"> 
-            <i class="fas fa-credit-card"></i></a>
+            <i class="fas fa-credit-card fa-2x"></i></a>
     `
     let buttonContainer = document.getElementById("affiliate-button-div");
     buttonContainer.appendChild(affiliateButton);
@@ -397,20 +397,20 @@ function createAffiliateButton(data) {
 
 // Handling thumbs-up thumbs-down toggle. Should be replaced by a radio-button type of control
 function offerLike(offerId) {
-    if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far-lg fa-thumbs-up"></i>`) {
-        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas-lg fa-thumbs-up"></i>`;
+    if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-up fa-2x"></i>`) {
+        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-up fa-2x"></i>`;
         getUserPreferencesLike(offerId);
     } else {
-        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far-lg fa-thumbs-up"></i>`
+        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-up fa-2x"></i>`
     }
 }
 
 function offerDislike(offerId) {
-    if (document.getElementById("dislikeButton-" + offerId).innerHTML === `<i class="far-lg fa-thumbs-down"></i>`) {
-        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas-lg fa-thumbs-down"></i>`;
+    if (document.getElementById("dislikeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-down fa-2x"></i>`) {
+        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-down fa-2x"></i>`;
         getUserPreferencesDislike(offerId);
     } else {
-        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far-lg fa-thumbs-down"></i>`
+        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-down fa-2x"></i>`
     }
 }
 
@@ -553,7 +553,8 @@ function recommendedOffersDetails(data) {
         "id": data.offer.id,
         "headline": data.offer.headline,
         "merchant_name": data.offer.merchant_name,
-        "merchant_logo_url": data.offer.merchant_logo_url
+        "merchant_logo_url": data.offer.merchant_logo_url,
+        "category": data.offer.category
     };
     recommendedOffersDetailsArray.push(recOffer);
     //console.log("RECOMMENDED OFFERS ARRAY DETAILS");
