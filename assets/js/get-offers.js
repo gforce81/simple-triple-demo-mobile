@@ -547,6 +547,8 @@ function recommendedOffersDetails(data) {
         "merchant_logo_url": data.offer.merchant_logo_url
     };
     recommendedOffersDetailsArray.push(recOffer);
+    console.log("RECOMMENDED OFFERS ARRAY DETAILS");
+    console.log(recommendedOffersDetailsArray);
 }
 
 //******** SHARED FETCH POST FUNCTION ********
