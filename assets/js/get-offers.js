@@ -2,6 +2,8 @@
 const urlQueryString = window.location.search;
 const urlParams = new URLSearchParams(urlQueryString);
 let defaultUserDislikes = [];
+let defaultUserRecommendations = [];
+let recommendedOffersDetailsArray = [];
 
 let latitude = "40.700514";
 let longitude = "-80.035769";
@@ -67,25 +69,6 @@ function getGeoCode() {
         alert("Precise location is not available. Please add the {?postalcode=} URL parameter and reload");
     }
 }
-
-
-//******** SHARED FETCH FUNCTION ********
-async function fetch_postRequest(url, body) {
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            mode: "cors",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
-        });
-        return response.json()
-    } catch (err) {
-        console.log("Something went wrong with the fetch");
-        console.log(err)
-    }
-}
-
-//***************************************
 
 function getOffers() {
     let url = "https://triple-proxy.grogoo.dev/search";
@@ -210,7 +193,8 @@ function displayOfferCards(data) {
     } else {
         for (let i = 0; i < results.length; i++) {
             if (defaultUserDislikes.includes(results[i].id)) {
-                console.log("Skipping offer ID: " + results[i].id)
+                console.log("Skipping offer ID: " + results[i].id);
+                createReplacementOffer(i);
             } else {
                 let searchResultCard = document.createElement("div");
                 searchResultCard.id = "offer-" + results[i].id;
@@ -240,6 +224,35 @@ function displayOfferCards(data) {
             }
         }
     }
+}
+
+// function to create a replacement offer based on recommendation array
+function createReplacementOffer(offerIndex) {
+    let searchResultCard = document.createElement("div");
+    searchResultCard.id = "offer-" + recommendedOffersDetailsArray[i].id;
+    searchResultCard.className = "card";
+    searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
+
+    searchResultCard.innerHTML = `
+        <div class="col-md-4 d-flex align-items-center" style="width: 20%">
+                <img src="` + recommendedOffersDetailsArray[i].merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
+                        10px; height: auto; width: 80%;" alt="offer logo">
+            </div>
+            <div class="col-md-8" style="width: 80%">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">` + recommendedOffersDetailsArray[i].headline + `</h5>
+                    <p class="card-text" style="font-size: 0.800em;">` + recommendedOffersDetailsArray[i].merchant_name + `</p>
+                    <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + recommendedOffersDetailsArray[i].category + `
+                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + recommendedOffersDetailsArray[i].id + `)">
+                        <i class="fas fa-eye"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 50px; margin-top: 5px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[i].id + `)" id="likeButton-` + recommendedOffersDetailsArray[i].id + `"><i class="far fa-thumbs-up"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 5px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[i].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[i].id + `"><i class="far fa-thumbs-down"></i></a>
+                    </p> 
+                </div>
+            </div></div>
+        `
+    let mainContainer = document.getElementById("results_cards");
+    mainContainer.appendChild(searchResultCard);
 }
 
 function getOfferDetails(offerid) {
@@ -337,6 +350,7 @@ function displayOfferCategories(data) {
     }
 }
 
+// Get an affiliate link if the offer type warrants it
 function getAffiliateLink(offerid) {
     let url = "https://triple-proxy.grogoo.dev/affiliate";
     let body = {
@@ -372,6 +386,7 @@ function createAffiliateButton(data) {
     buttonContainer.appendChild(affiliateButton);
 }
 
+// Handling thumbs-up thumbs-down toggle. Should be replaced by a radio-button type of control
 function offerLike(offerId) {
     if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-up"></i>`) {
         document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-up"></i>`;
@@ -390,22 +405,7 @@ function offerDislike(offerId) {
     }
 }
 
-//******** SHARED FETCH GET FUNCTION ********
-async function fetch_GetRequest(url, params) {
-    try {
-        const response = await fetch(url, {
-            method: "GET",
-            mode: "cors",
-        });
-        return response.json()
-    } catch (err) {
-        console.log("Something went wrong with the fetch");
-        console.log(err)
-    }
-}
-
-//********  ********
-
+// Before we can update a user preference like or dislike, we need the current values so we can push to the array and resubmit
 function getUserPreferencesLike(offerId) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
     let card_account = urlParams.get("cardaccount");
@@ -440,6 +440,7 @@ function getUserPreferencesDislike(offerId) {
     }
 }
 
+// Record a user like or thumb-up into the user preferences database
 function recordUserLike(offerId, cardAccount, data) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
     let userLikes = data.liked_offers;
@@ -463,6 +464,7 @@ function recordUserLike(offerId, cardAccount, data) {
     }
 }
 
+// Record a user disklike or thumb-down into the user preferences database
 function recordUserDislike(offerId, cardAccount, data) {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
     let userDislikes = data.disliked_offers;
@@ -486,6 +488,7 @@ function recordUserDislike(offerId, cardAccount, data) {
     }
 }
 
+// Get the disklikes as we load the page so that we can remove/pop out offers before displaying them
 function getDefaultUserDislikes() {
     let url = "https://triple-proxy.grogoo.dev/user-preferences";
     let card_account = urlParams.get("cardaccount");
@@ -496,7 +499,8 @@ function getDefaultUserDislikes() {
             .then(data => {
                 console.log(data);
                 defaultUserDislikes = data.disliked_offers;
-
+                // Get the calculated recommended offer IDs as we load the page so that we can substitute the dislikes for this
+                defaultUserRecommendations = data.recommended_offers;
             })
     } catch (err) {
         console.log("Something went wrong with getting the user preferences");
@@ -504,6 +508,77 @@ function getDefaultUserDislikes() {
     }
 }
 
+// Get the details for each recommended offer
+function getRecommendedOfferDetails() {
+    for (let i = 0; i <= defaultUserRecommendations; i++) {
+        let url = "https://triple-proxy.grogoo.dev/details";
+        let body = {
+            "card_account": urlParams.get("cardaccount"),
+            "offer_id": offerid,
+            "proximity_target": {
+                "radius": 35000,
+                "latitude": parseFloat(latitude),
+                "longitude": parseFloat(longitude)
+            }
+        };
+
+        try {
+            fetch_postRequest(url, body)
+                .then(data => {
+                    console.log(data);
+                    recommendedOffersDetails(data);
+                })
+        } catch (err) {
+            console.log("Something went wrong with getting offer details");
+            console.log(err)
+        }
+    }
+}
+
+// Record the details in an array of JSON
+function recommendedOffersDetails(data) {
+    let recOffer = {
+        "id": data.offer.id,
+        "headline": data.offer.headline,
+        "merchant_name": data.offer.merchant_name,
+        "merchant_logo_url": data.offer.merchant_logo_url
+    };
+    recommendedOffersDetailsArray.push(recOffer);
+}
+
+//******** SHARED FETCH POST FUNCTION ********
+async function fetch_postRequest(url, body) {
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            mode: "cors",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+        return response.json()
+    } catch (err) {
+        console.log("Something went wrong with the fetch");
+        console.log(err)
+    }
+}
+
+//***************************************
+
+//******** SHARED FETCH GET FUNCTION ********
+async function fetch_GetRequest(url, params) {
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            mode: "cors",
+        });
+        return response.json()
+    } catch (err) {
+        console.log("Something went wrong with the fetch");
+        console.log(err)
+    }
+}
+
+//********  ********
 
 //******** SHARED FETCH PUT FUNCTION ********
 async function fetch_putRequest(url, body) {
