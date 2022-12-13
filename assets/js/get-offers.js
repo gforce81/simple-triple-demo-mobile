@@ -194,7 +194,12 @@ function displayOfferCards(data) {
         for (let i = 0; i < results.length; i++) {
             if (defaultUserDislikes.includes(results[i].id)) {
                 console.log("Skipping offer ID: " + results[i].id);
-                createReplacementOffer(i);
+                try {
+                    createReplacementOffer(i);
+                }
+                catch (e) {
+                    console.log("Not enough recommendations available")
+                }
             } else {
                 let searchResultCard = document.createElement("div");
                 searchResultCard.id = "offer-" + results[i].id;
