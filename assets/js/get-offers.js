@@ -397,20 +397,20 @@ function createAffiliateButton(data) {
 
 // Handling thumbs-up thumbs-down toggle. Should be replaced by a radio-button type of control
 function offerLike(offerId) {
-    if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-up"></i>`) {
-        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-up"></i>`;
+    if (document.getElementById("likeButton-" + offerId).innerHTML === `<i class="far-lg fa-thumbs-up"></i>`) {
+        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="fas-lg fa-thumbs-up"></i>`;
         getUserPreferencesLike(offerId);
     } else {
-        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-up"></i>`
+        document.getElementById("likeButton-" + offerId).innerHTML = `<i class="far-lg fa-thumbs-up"></i>`
     }
 }
 
 function offerDislike(offerId) {
-    if (document.getElementById("dislikeButton-" + offerId).innerHTML === `<i class="far fa-thumbs-down"></i>`) {
-        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas fa-thumbs-down"></i>`;
+    if (document.getElementById("dislikeButton-" + offerId).innerHTML === `<i class="far-lg fa-thumbs-down"></i>`) {
+        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="fas-lg fa-thumbs-down"></i>`;
         getUserPreferencesDislike(offerId);
     } else {
-        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far fa-thumbs-down"></i>`
+        document.getElementById("dislikeButton-" + offerId).innerHTML = `<i class="far-lg fa-thumbs-down"></i>`
     }
 }
 
