@@ -424,7 +424,7 @@ function recordUserLike(offerId, cardAccount, data) {
     let body = {
         "card_account": cardAccount,
         "last_updated": isoDate,
-        "liked_offers": currentlikes.push(offerId)
+        "liked_offers": currentlikes.push(offerId.toString())
     };
 
     try {
