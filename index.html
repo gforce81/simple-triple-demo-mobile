@@ -34,9 +34,21 @@
     <div class="row" id="title_row" style="min-width: 80%; margin-right: auto; margin-left: auto;
     padding-top: 20px; padding-bottom: 10px; max-width: 980px;">
         <div>
-            <img src="assets/images/triple_logo.svg" class="img-fluid"
+            <button class="btn-sm btn-secondary" style="background-color: white; border: 0px;" id="triplemenu-button" data-bs-toggle="collapse"
+                    data-bs-target="#triplemenu" aria-expanded="false" aria-controls="collapseFilters">
+                <img src="assets/images/triple_logo.svg" class="img-fluid"
                  style="max-height: 40px; display: block; object-fit: fill;"
                  loading="lazy" alt="triple logo">
+            </button>
+        </div>
+        <div class="collapse" id="triplemenu" style="background-color: whitesmoke;">
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+                <div style="margin-top: 5px; margin-bottom: 5px;"><button type="button" class="btn btn-secondary">My Likes</button></div>
+                <div style="margin-top: 5px; margin-bottom: 5px;"><button type="button" class="btn btn-secondary">My Dislikes</button></div>
+                <div style="margin-top: 5px; margin-bottom: 5px;"><button type="button" class="btn btn-secondary">My Recommendations</button></div>
+                <div style="margin-top: 5px; margin-bottom: 5px;"><button type="button" class="btn btn-danger">Reset Preferences</button></div>
+                <div style="margin-top: 5px; margin-bottom: 5px;"><button type="button" class="btn btn-danger">Calculate Recommendations</button></div>
+            </div>
         </div>
     </div>
     <div class="row" id="search_bar_row" style="min-width: 80%; margin-right: auto; margin-left: auto;
