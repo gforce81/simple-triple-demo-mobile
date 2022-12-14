@@ -569,7 +569,7 @@ function resetUserPreferences() {
         "card_account": card_account
     }
     try {
-        fetch_postRequest(url)
+        fetch_postRequest(url, body)
             .then(data => {
                 console.log(data);
             })
