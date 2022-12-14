@@ -561,6 +561,24 @@ function recommendedOffersDetails(data) {
     //console.log(recommendedOffersDetailsArray);
 }
 
+
+function resetUserPreferences() {
+    let url = "https://triple-proxy.grogoo.dev/reset-preferences";
+    let card_account = urlParams.get("cardaccount");
+    let body = {
+        "card_account": card_account
+    }
+    try {
+        fetch_postRequest(url)
+            .then(data => {
+                console.log(data);
+            })
+    } catch (err) {
+        console.log("Something went wrong with resetting the user preferences");
+        console.log(err)
+    }
+}
+
 //******** SHARED FETCH POST FUNCTION ********
 async function fetch_postRequest(url, body) {
     try {
