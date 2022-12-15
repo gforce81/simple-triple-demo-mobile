@@ -196,7 +196,14 @@ function displayOfferCards(data) {
                 console.log("Skipping offer ID: " + results[i].id);
                 try {
                     // -1 on the index so that we can assume/will work that we will have at least one recommendation
-                    createReplacementOffer(i-1);
+                    let index;
+                    if (i === 0) {
+                        index = 0
+                    }
+                    else {
+                        index = i-1
+                    }
+                    createReplacementOffer(index);
                 }
                 catch (e) {
                     console.log("Not enough recommendations available")
@@ -548,7 +555,7 @@ function getRecommendedOfferDetails() {
 // Record the details in an array of JSON
 function recommendedOffersDetails(data) {
     //console.log("REC OFFERS");
-    //console.log(data);
+    console.log(data);
     let recOffer = {
         "id": data.offer.id,
         "headline": data.offer.headline,
