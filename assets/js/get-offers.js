@@ -91,6 +91,8 @@ function getOffers() {
     try {
         fetch_postRequest(url, body)
             .then(data => {
+                console.log("GET_OFFERS RESULTS");
+                console.log("##################");
                 console.log(data);
                 displayOfferCards(data);
             })
@@ -159,6 +161,8 @@ function getOffersWithCategories() {
     try {
         fetch_postRequest(url, body)
             .then(data => {
+                console.log("GET_OFFERSWITHCATEGORIES RESULTS");
+                console.log("################################");
                 console.log(data);
                 displayOfferCards(data);
             })
@@ -286,6 +290,8 @@ function getOfferDetails(offerid) {
     try {
         fetch_postRequest(url, body)
             .then(data => {
+                console.log("GET_OFFERSDETAILS");
+                console.log("##################");
                 console.log(data);
                 displayOfferDetails(data);
             })
@@ -337,6 +343,8 @@ function getCategories() {
     try {
         fetch_postRequest(url, body)
             .then(data => {
+                console.log("GET_CATEGORIES");
+                console.log("##################");
                 console.log(data);
                 getDefaultUserDislikes();
                 displayOfferCategories(data);
@@ -378,6 +386,8 @@ function getAffiliateLink(offerid) {
     try {
         fetch_postRequest(url, body)
             .then(data => {
+                console.log("GET_AFFILIATE LINK");
+                console.log("##################");
                 console.log(data);
                 createAffiliateButton(data)
             })
