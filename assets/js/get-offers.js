@@ -586,6 +586,39 @@ function resetUserPreferences() {
     }
 }
 
+function calculateUserRecommendations() {
+    let url = "https://triple-proxy.grogoo.dev/recommendations";
+    let card_account = urlParams.get("cardaccount");
+    let body = {
+        "card_account": card_account
+    }
+    try {
+        fetch_postRequest(url, body)
+            .then(data => {
+                console.log(data);
+            })
+    } catch (err) {
+        console.log("Something went wrong with calculating recommendations");
+        console.log(err)
+    }
+}
+
+function getUserOffersPreferences() {
+    let url = "https://triple-proxy.grogoo.dev/user-preferences";
+    let card_account = urlParams.get("cardaccount");
+    url = url + "?card_account=" + card_account;
+
+    try {
+        fetch_GetRequest(url)
+            .then(data => {
+                console.log(data);
+            })
+    } catch (err) {
+        console.log("Something went wrong with getting the user preferences");
+        console.log(err)
+    }
+}
+
 //******** SHARED FETCH POST FUNCTION ********
 async function fetch_postRequest(url, body) {
     try {
