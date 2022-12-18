@@ -203,6 +203,7 @@ function displayOfferCards(data) {
                 try {
                     //randomize the offer we pick in our available recommended offers details
                     const randomOfferDetails = Math.floor(Math.random() * recommendedOffersDetailsArray.length);
+                    //directly sending the content of details object, not an index
                     createReplacementOffer(recommendedOffersDetailsArray[randomOfferDetails]);
                 }
                 catch (e) {
@@ -651,7 +652,7 @@ async function fetch_postRequest(url, body) {
 //***************************************
 
 //******** SHARED FETCH GET FUNCTION ********
-async function fetch_GetRequest(url, params) {
+async function fetch_GetRequest(url) {
     try {
         const response = await fetch(url, {
             method: "GET",
