@@ -196,18 +196,14 @@ function displayOfferCards(data) {
         mainContainer.appendChild(searchResultCard);
     } else {
         for (let i = 0; i < results.length; i++) {
+            // checking if the offer is part of the dislikes. If yes, replacing it with a recommendation
+            // we can randomize in the array of recommendations
             if (defaultUserDislikes.includes(results[i].id)) {
-                console.log("Skipping offer ID: " + results[i].id);
+                console.log("Skipping disliked offer ID: " + results[i].id);
                 try {
-                    // -1 on the index so that we can assume/will work that we will have at least one recommendation
-                    let index;
-                    if (i === 0) {
-                        index = 0
-                    }
-                    else {
-                        index = i-1
-                    }
-                    createReplacementOffer(index);
+                    //randomize the offer we pick in our available recommended offers details
+                    const randomOfferDetails = Math.floor(Math.random() * recommendedOffersDetailsArray.length);
+                    createReplacementOffer(recommendedOffersDetailsArray[randomOfferDetails]);
                 }
                 catch (e) {
                     console.log("Not enough recommendations available")
@@ -244,29 +240,28 @@ function displayOfferCards(data) {
 }
 
 // function to create a replacement offer based on recommendation array
-function createReplacementOffer(offerIndex) {
-    console.log("RECOMMENDED OFFER WITH INDEX: " + offerIndex);
+function createReplacementOffer(offerDetails) {
     console.log("RECOMMENDED OFFER: ");
-    console.log(recommendedOffersDetailsArray[offerIndex]);
+    console.log(offerDetails);
     let searchResultCard = document.createElement("div");
-    searchResultCard.id = "offer-" + recommendedOffersDetailsArray[offerIndex].id;
+    searchResultCard.id = "offer-" + offerDetails.id;
     searchResultCard.className = "card";
     searchResultCard.style = "flex-direction: row; width: 100%; margin-top: 5px;";
 
     searchResultCard.innerHTML = `
         <div class="col-md-4 d-flex align-items-center" style="width: 20%">
-                <img src="` + recommendedOffersDetailsArray[offerIndex].merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
+                <img src="` + offerDetails.merchant_logo_url + `" class="img-fluid rounded-start" style="margin-left:
                         10px; height: auto; width: 80%;" alt="offer logo">
             </div>
             <div class="col-md-8" style="width: 80%">
                 <div class="card-body">
-                    <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">` + recommendedOffersDetailsArray[offerIndex].headline + `</h5>
-                    <p class="card-text" style="font-size: 0.800em;">` + recommendedOffersDetailsArray[offerIndex].merchant_name + `</p>
-                    <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + recommendedOffersDetailsArray[offerIndex].category + `
-                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + recommendedOffersDetailsArray[offerIndex].id + `)">
+                    <h5 class="card-title" style="font-size: 0.800em; font-weight: bold">` + offerDetails.headline + `</h5>
+                    <p class="card-text" style="font-size: 0.800em;">` + offerDetails.merchant_name + `</p>
+                    <p class="card-text" style="font-size: 0.700em; font-weight: lighter;">` + offerDetails.category + `
+                    <a data-bs-toggle="modal" data-bs-target="#detailsModal" style="color: #55acee; margin-left: 20px; margin-top: 5px;" href="#!" role="button" onclick="getOfferDetails(` + offerDetails.id + `)">
                         <i class="fas fa-eye fa-2x"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 40px; margin-top: 7px;" href="#!" role="button" onclick="offerLike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="likeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-up fa-2x"></i></a>
-                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 7px;" href="#!" role="button" onclick="offerDislike(` + recommendedOffersDetailsArray[offerIndex].id + `)" id="dislikeButton-` + recommendedOffersDetailsArray[offerIndex].id + `"><i class="far fa-thumbs-down fa-2x"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 40px; margin-top: 7px;" href="#!" role="button" onclick="offerLike(` + offerDetails.id + `)" id="likeButton-` + offerDetails.id + `"><i class="far fa-thumbs-up fa-2x"></i></a>
+                        <a data-bs-toggle="modal" data-bs-target="#" style="color: #55acee; margin-left: 15px; margin-top: 7px;" href="#!" role="button" onclick="offerDislike(` + offerDetails.id + `)" id="dislikeButton-` + offerDetails.id + `"><i class="far fa-thumbs-down fa-2x"></i></a>
                     </p> 
                 </div>
             </div></div>
@@ -527,7 +522,7 @@ function getDefaultUserDislikes() {
                 defaultUserDislikes = data.disliked_offers;
                 // Get the calculated recommended offer IDs as we load the page so that we can substitute the dislikes for this
                 defaultUserRecommendations = data.recommended_offers;
-                getRecommendedOfferDetails();
+                getRecommendedOfferDetails(defaultUserDislikes.length);
             })
     } catch (err) {
         console.log("Something went wrong with getting the user preferences");
@@ -536,12 +531,19 @@ function getDefaultUserDislikes() {
 }
 
 // Get the details for each recommended offer
-function getRecommendedOfferDetails() {
-    for (let i = 0; i < defaultUserRecommendations.length; i++) {
+function getRecommendedOfferDetails(recsNeeded) {
+    for (let i = 0; i < recsNeeded + 2; i++) {
+        // Since we always have more recommendations than truly disliked offers, we can limit to only loading what we need
+        // Since we want to gamify a bit, we can randomize the selected recommendations
+
+        const randomRecId = Math.floor(Math.random() * defaultUserRecommendations.length);
+        console.log("RANDOMIZED REC ID");
+        console.log("#################");
+        console.log(defaultUserRecommendations[randomRecId]);
         let url = "https://triple-proxy.grogoo.dev/details";
         let body = {
             "card_account": urlParams.get("cardaccount"),
-            "offer_id": defaultUserRecommendations[i],
+            "offer_id": defaultUserRecommendations[randomRecId],
             "proximity_target": {
                 "radius": 35000,
                 "latitude": parseFloat(latitude),
@@ -552,6 +554,8 @@ function getRecommendedOfferDetails() {
         try {
             fetch_postRequest(url, body)
                 .then(data => {
+                    console.log("GET_RECOMMENED OFFERS DETAILS")
+                    console.log("#############################")
                     console.log(data);
                     recommendedOffersDetails(data);
                 })
@@ -565,7 +569,6 @@ function getRecommendedOfferDetails() {
 // Record the details in an array of JSON
 function recommendedOffersDetails(data) {
     //console.log("REC OFFERS");
-    console.log(data);
     let recOffer = {
         "id": data.offer.id,
         "headline": data.offer.headline,
