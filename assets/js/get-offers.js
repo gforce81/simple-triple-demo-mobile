@@ -676,7 +676,7 @@ function getRecommendedOfferDetails(recsNeeded) {
         try {
             fetch_postRequest(url, body)
                 .then(data => {
-                    console.log("GET_RECOMMENED OFFERS DETAILS")
+                    console.log("GET_RECOMMENDED OFFERS DETAILS")
                     console.log("#############################")
                     console.log(data);
                     recommendedOffersDetails(data);
