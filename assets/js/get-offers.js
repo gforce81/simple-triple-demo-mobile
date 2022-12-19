@@ -4,6 +4,10 @@ const urlParams = new URLSearchParams(urlQueryString);
 let defaultUserDislikes = [];
 let defaultUserRecommendations = [];
 let recommendedOffersDetailsArray = [];
+let searchOffset = 0;
+let searchPageSize = 25;
+let queryType = "default"; //used to decide if the more results functions calls the classic search or filtered on categories
+let searchTotalHits = 0; //used to decide if we can request more results
 
 let latitude = "40.700514";
 let longitude = "-80.035769";
@@ -71,12 +75,13 @@ function getGeoCode() {
 }
 
 function getOffers() {
+    queryType = "default";
     let url = "https://triple-proxy.grogoo.dev/search";
     let body = {
         "card_account": urlParams.get("cardaccount"),
         "text_query": document.getElementById("searchbar").value,
-        "page_size": 50,
-        "page_offset": 0,
+        "page_size": searchPageSize,
+        "page_offset": searchOffset,
         "proximity_target": {
             "radius": 35000,
             "latitude": parseFloat(latitude),
@@ -95,6 +100,10 @@ function getOffers() {
                 console.log("##################");
                 console.log(data);
                 displayOfferCards(data);
+                searchTotalHits = data.total;
+                if (searchPageSize >= searchTotalHits) {
+                    disable_getMoreOffersButton()
+                }
             })
     } catch (err) {
         console.log("Something went wrong with getting offers");
@@ -104,13 +113,17 @@ function getOffers() {
 
 // dedicated search function for category filters because filters might get populated after the initial query
 function getOffersWithCategories() {
-    document.getElementById("results_cards").innerHTML = "";
+    queryType = "categories";
+    // we do this to avoid erasing the search results if we are just requesting more offers filtered on a category
+    if (searchOffset === 0) {
+        document.getElementById("results_cards").innerHTML = "";
+    }
     let url = "https://triple-proxy.grogoo.dev/search";
     let body = {
         "card_account": urlParams.get("cardaccount"),
         "text_query": document.getElementById("searchbar").value,
-        "page_size": 50,
-        "page_offset": 0,
+        "page_size": searchPageSize,
+        "page_offset": searchOffset,
         "proximity_target": {
             "radius": 35000,
             "latitude": parseFloat(latitude),
@@ -165,6 +178,10 @@ function getOffersWithCategories() {
                 console.log("################################");
                 console.log(data);
                 displayOfferCards(data);
+                searchTotalHits = data.total;
+                if (searchPageSize >= searchTotalHits) {
+                    disable_getMoreOffersButton()
+                }
             })
     } catch (err) {
         console.log("Something went wrong with getting offers");
@@ -172,6 +189,28 @@ function getOffersWithCategories() {
     }
 }
 
+function getMoreOffers() {
+    if (searchOffset <= searchTotalHits - searchPageSize) {
+        if (queryType === "default") {
+            searchOffset = searchOffset + 25;
+            getOffers();
+        }
+        else {
+            searchOffset = searchOffset + 25;
+            getOffersWithCategories();
+        }
+    }
+    else {
+        disable_getMoreOffersButton()
+    }
+}
+
+function disable_getMoreOffersButton() {
+    document.getElementById("more-offer-cell").innerHTML = "";
+    document.getElementById("more-offer-cell").innerHTML =
+        `<button type="button" class="btn btn-info btn-sm" disabled id="more-offers-button" style="margin-top: 10px;" onClick="">No More
+                Offers</button>`;
+}
 
 function displayOfferCards(data) {
     let results = data.offers;
