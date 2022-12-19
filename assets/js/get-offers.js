@@ -8,6 +8,7 @@ let searchOffset = 0;
 let searchPageSize = 25;
 let queryType = "default"; //used to decide if the more results functions calls the classic search or filtered on categories
 let searchTotalHits = 0; //used to decide if we can request more results
+let currentCategory = "ALL"; //used to clear the offer display container if a user is simply changing category and not query
 
 let latitude = "40.700514";
 let longitude = "-80.035769";
@@ -25,7 +26,7 @@ function showPosition(position) {
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
     console.log("My Coordinates: " + latitude + "," + longitude);
-    getOffers(latitude, longitude);
+    getOffers();
 }
 
 function showPositionError(error) {
@@ -114,6 +115,7 @@ function getOffers() {
 // dedicated search function for category filters because filters might get populated after the initial query
 function getOffersWithCategories() {
     queryType = "categories";
+    enable_getMoreOffersButton();
     // we do this to avoid erasing the search results if we are just requesting more offers filtered on a category
     if (searchOffset === 0) {
         document.getElementById("results_cards").innerHTML = "";
@@ -132,44 +134,118 @@ function getOffersWithCategories() {
         "apply_filter": {}
     };
     //handling filters
+    if (document.getElementById("all-category-filters").checked) {
+        console.log("Not filtering on a category");
+        let thisCategory = "ALL";
+        //doing all of this so that the results are cleared if the user changes just the category
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
+    }
     if (document.getElementById("inperson-switch").checked) {
-        body.apply_filter.mode = "IN_PERSON"
+        body.apply_filter.mode = "IN_PERSON";
+        let thisCategory = "IN_PERSON";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("AUTOMOTIVE-category-radio").checked) {
-        body.apply_filter.category = "AUTOMOTIVE"
+        body.apply_filter.category = "AUTOMOTIVE";
+        let thisCategory = "AUTOMOTIVE";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("FOOD-category-radio").checked) {
-        body.apply_filter.category = "FOOD"
+        body.apply_filter.category = "FOOD";
+        let thisCategory = "FOOD";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("ENTERTAINMENT-category-radio").checked) {
-        body.apply_filter.category = "ENTERTAINMENT"
+        body.apply_filter.category = "ENTERTAINMENT";
+        let thisCategory = "ENTERTAINMENT";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("RETAIL-category-radio").checked) {
-        body.apply_filter.category = "RETAIL"
+        body.apply_filter.category = "RETAIL";
+        let thisCategory = "RETAIL";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("TRAVEL-category-radio").checked) {
-        body.apply_filter.category = "TRAVEL"
+        body.apply_filter.category = "TRAVEL";
+        let thisCategory = "TRAVEL";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("FINANCIAL_SERVICES-category-radio").checked) {
-        body.apply_filter.category = "FINANCIAL_SERVICES"
+        body.apply_filter.category = "FINANCIAL_SERVICES";
+        let thisCategory = "FINANCIAL_SERVICES";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("OFFICE_AND_BUSINESS-category-radio").checked) {
-        body.apply_filter.category = "OFFICE_AND_BUSINESS"
+        body.apply_filter.category = "OFFICE_AND_BUSINESS";
+        let thisCategory = "OFFICE_AND_BUSINESS";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("HOME-category-radio").checked) {
-        body.apply_filter.category = "HOME"
+        body.apply_filter.category = "HOME";
+        let thisCategory = "HOME";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("HEALTH_AND_BEAUTY-category-radio").checked) {
-        body.apply_filter.category = "HEALTH_AND_BEAUTY"
+        body.apply_filter.category = "HEALTH_AND_BEAUTY";
+        let thisCategory = "HEALTH_AND_BEAUTY";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("CHILDREN_AND_FAMILY-category-radio").checked) {
-        body.apply_filter.category = "CHILDREN_AND_FAMILY"
+        body.apply_filter.category = "CHILDREN_AND_FAMILY";
+        let thisCategory = "CHILDREN_AND_FAMILY";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("ELECTRONICS-category-radio").checked) {
-        body.apply_filter.category = "ELECTRONICS"
+        body.apply_filter.category = "ELECTRONICS";
+        let thisCategory = "ELECTRONICS";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     if (document.getElementById("UTILITIES_AND_TELECOM-category-radio").checked) {
-        body.apply_filter.category = "UTILITIES_AND_TELECOM"
+        body.apply_filter.category = "UTILITIES_AND_TELECOM";
+        let thisCategory = "UTILITIES_AND_TELECOM";
+        if (currentCategory !== thisCategory) {
+            document.getElementById("results_cards").innerHTML = "";
+        }
+        currentCategory = thisCategory;
     }
     try {
         fetch_postRequest(url, body)
@@ -210,6 +286,12 @@ function disable_getMoreOffersButton() {
     document.getElementById("more-offer-cell").innerHTML =
         `<button type="button" class="btn btn-info btn-sm" disabled id="more-offers-button" style="margin-top: 10px;" onClick="">No More
                 Offers</button>`;
+}
+
+function enable_getMoreOffersButton() {
+    document.getElementById("more-offer-cell").innerHTML = "";
+    document.getElementById("more-offer-cell").innerHTML =
+        `<button type="button" class="btn btn-info btn-sm" style="margin-top: 10px;" id="more-offers-button" onclick="getMoreOffers()">More Offers</button>`;
 }
 
 function displayOfferCards(data) {
